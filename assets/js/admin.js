@@ -7,6 +7,7 @@ jQuery( function( $ ) {
 		init: function() {
 			$( '#multiple-shipment-tracking' )
 				.on( 'click', 'a.delete-tracking', this.delete_tracking )
+				.on( 'click', 'a.button-add-tracking', this.add_tracking )
 				.on( 'click', 'button.button-show-form', this.show_form )
 				.on( 'click', 'button.button-save-form', this.save_form );
 		},
@@ -55,6 +56,38 @@ jQuery( function( $ ) {
 				
 				if($( '#shipment-tracking-form' ).hasClass("change-status-order") || $( '#tracking_status option:selected' ).val() != '' ) {
 					window.location.reload();
+				}
+			});
+
+			return false;
+		},
+
+		// Add a tracking item
+		add_tracking: function() {
+
+			var tracking_id = $( this ).attr( 'rel' );
+
+			$( '#tracking-item-' + tracking_id ).block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+
+			var data = {
+				action:      'devvpst_shipment_tracking_add_item',
+				order_id:    woocommerce_admin_meta_boxes.post_id,
+				tracking_id: tracking_id,
+				security:    $( '#devvpst_shipment_tracking_add_nonce' ).val()
+			};
+
+			$.post( woocommerce_admin_meta_boxes.ajax_url, data, function( response ) {
+				$( '#tracking-item-' + tracking_id ).unblock();
+				if(response) {
+					$( "#tracking-item-" + tracking_id+ " .button-add").html(response);
+				} else {
+					$( "#tracking-item-" + tracking_id+ " .button-add").html('Error response ajax add.');
 				}
 			});
 
@@ -126,36 +159,4 @@ jQuery( function( $ ) {
 
 	devvpst_shipment_tracking_items.init();
 	window.devvpst_shipment_tracking_refresh = devvpst_shipment_tracking_items.refresh_items;
-
-	$('.main-plugin .devvpst-active form').submit(function(e) {
-        e.preventDefault();
-        var form = $(this);
-        $.ajax({
-            type : "post", 
-            url : ajaxurl,
-            data : {
-                action: "devvpst_active", 
-                data : form.serialize(),
-            },
-            context: this,
-            beforeSend: function(){
-               
-            },
-            success: function(response) {
-                response = JSON.parse(response);
-                if(response.code == 300) {
-                    window.location.reload();
-                } else {
-                    if($(this).find('.check-progress').length > 0) {
-                        $(this).find('.check-progress').html(response.message);
-                    } else {
-                        $('.main-plugin .devvpst-active h2').append( "<p class='check-progress'>"+ response.message +"</p>" );
-                    }
-                }
-            },
-            error: function( jqXHR, textStatus, errorThrown ){
-                console.log( 'The following error occured: ' + textStatus, errorThrown );
-            }
-        })
-    });
 } );

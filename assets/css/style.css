@@ -13,6 +13,9 @@
     padding: 10px;
     margin: 0;
 }
+#multiple-shipment-tracking .meta.button-add {
+    padding-bottom: 0 !important;
+}
 #multiple-shipment-tracking .meta a.delete-tracking {
     color: #a00;
 }

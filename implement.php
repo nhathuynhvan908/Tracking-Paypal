@@ -4,6 +4,7 @@ class DEVVPST_IMPLEMENTS{
     public function __construct(){
         // Order page metabox actions.
         add_action( 'wp_ajax_devvpst_shipment_tracking_delete_item', array( $this, 'meta_box_delete_tracking' ) );
+		add_action( 'wp_ajax_devvpst_shipment_tracking_add_item', array( $this, 'meta_box_add_tracking' ) );
         add_action( 'wp_ajax_devvpst_shipment_tracking_save_form', array( $this, 'save_meta_box_ajax' ) );
         add_action( 'wp_ajax_devvpst_shipment_tracking_get_items', array( $this, 'get_meta_box_items_ajax' ) );
 
@@ -59,6 +60,44 @@ class DEVVPST_IMPLEMENTS{
 			
 			$this->delete_tracking_item( $order_id, $tracking_id );
 		}
+	}
+
+	/**
+	 * Order Add Tracking
+	 *
+	 * Function to add a tracking item
+	 */
+	public function meta_box_add_tracking() {
+		global $devvpst_setting, $devvpst_helpers;
+		check_ajax_referer( 'add-tracking-item', 'security', true );
+
+		$order_id    = wc_clean( $_POST['order_id'] );
+		$tracking_id = wc_clean( $_POST['tracking_id'] );
+		$data = $devvpst_setting->get_tracking_items( $order_id, true );
+		$msg = '';
+		if($data) {
+			$tracking_items = [];
+			foreach ($data as $key => $item) {
+				if($item["tracking_id"] == $tracking_id) {
+					$tracking_number = $item["tracking_number"];
+					$custom_tracking_provider = $item["custom_tracking_provider"];
+					$tracking_provider = $item["tracking_provider"];
+
+					$data_add = $devvpst_helpers->action_tracking_paypal('update', $order_id, $tracking_provider, $custom_tracking_provider, $tracking_number);
+					if($data_add) {
+						$item['tracking_code_curl'] = $data_add['code'];
+						$item['tracking_status_paypal'] = $data_add['data'];
+						$msg = 'Code: '.$data_add['code'].' | Status Tracking Paypal: '.$data_add['data'];
+					} 
+				} 
+
+				$tracking_items[] = $item;
+			}
+
+			$devvpst_setting->save_tracking_items( $order_id, $tracking_items );
+		} 
+
+		echo $msg;
 	}
 
 	/**
@@ -122,12 +161,12 @@ class DEVVPST_IMPLEMENTS{
 			);
 
 			// tracking_status_paypal
-			$data_tracking = $devvpst_helpers->action_tracking_paypal('update', $order_id, $args['tracking_provider'], $args['custom_tracking_provider'], $args['tracking_number']);
-			if($data_tracking) {
-				// show status tracking paypal
-				$args['tracking_code_curl'] = $data_tracking['code'];
-				$args['tracking_status_paypal'] = $data_tracking['data'];
-			}
+			// $data_tracking = $devvpst_helpers->action_tracking_paypal('update', $order_id, $args['tracking_provider'], $args['custom_tracking_provider'], $args['tracking_number']);
+			// if($data_tracking) {
+			// 	// show status tracking paypal
+			// 	$args['tracking_code_curl'] = $data_tracking['code'];
+			// 	$args['tracking_status_paypal'] = $data_tracking['data'];
+			// }
 			
 			// show list item
 			$tracking_item = $devvpst_setting->add_tracking_item( $order_id, $args );

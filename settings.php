@@ -295,6 +295,11 @@ class DEVVPST_SETTINGS{
 		) );
 
 		woocommerce_wp_hidden_input( array(
+			'id'    => 'devvpst_shipment_tracking_add_nonce',
+			'value' => wp_create_nonce( 'add-tracking-item' ),
+		) );
+
+		woocommerce_wp_hidden_input( array(
 			'id'    => 'devvpst_shipment_tracking_create_nonce',
 			'value' => wp_create_nonce( 'create-tracking-item' ),
 		) );
@@ -423,16 +428,19 @@ class DEVVPST_SETTINGS{
 					<br/>
 					<em><?php echo esc_html( $item['tracking_number'] ); ?></em>
 					<br/>
-					<?php if($item['tracking_status_paypal']) { ?>
-						<em>Code: <?php echo esc_html( $item['tracking_code_curl'] ); ?> | Status Tracking Paypal: <?php echo esc_html( $item['tracking_status_paypal'] ); ?></em>
-					<?php } ?>
 					<?php if($formatted['formatted_tracking_status']) { ?>
 						<em>Status order: <?php echo esc_html( $formatted['formatted_tracking_status'] ); ?></em>
 					<?php } ?>
 					
 				</p>
+				<?php if($item['tracking_status_paypal']) { ?>
+					<p class="meta button-add">
+						<em>Code: <?php echo esc_html( $item['tracking_code_curl'] ); ?> | Status Tracking Paypal: <?php echo esc_html( $item['tracking_status_paypal'] ); ?></em>
+					</p>
+				<?php } else { ?>
+					<p class="meta button-add"><a href="#" class="button-add-tracking button button-primary" rel="<?php echo esc_attr( $item['tracking_id'] ); ?>"><?php _e( 'Add tracking Paypal', 'devvp' ); ?></a></p>
+				<?php } ?>
 				<p class="meta">
-					<?php /* translators: 1: shipping date */ ?>
 					<?php echo esc_html( sprintf( __( 'Shipped on %s', 'devvp' ), date_i18n( 'Y-m-d', $item['date_shipped'] ) ) ); ?>
 					<a href="#" class="delete-tracking" rel="<?php echo esc_attr( $item['tracking_id'] ); ?>"><?php _e( 'Delete', 'devvp' ); ?></a>
 				</p>
@@ -564,8 +572,8 @@ class DEVVPST_SETTINGS{
 		$tracking_item['tracking_number']          = wc_clean( $args['tracking_number'] );
 		$tracking_item['date_shipped']             = wc_clean( strtotime( $args['date_shipped'] ) );
 		$tracking_item['tracking_status']          = wc_clean( $args['tracking_status'] );
-		$tracking_item['tracking_code_curl']       = wc_clean( $args['tracking_code_curl'] );
-		$tracking_item['tracking_status_paypal']   = wc_clean( $args['tracking_status_paypal'] );
+		$tracking_item['tracking_code_curl']       = '';
+		$tracking_item['tracking_status_paypal']   = '';
 		
 		if ( 0 == (int) $tracking_item['date_shipped'] ) {
 			 $tracking_item['date_shipped'] = time();

@@ -73,7 +73,8 @@ class DEVVPST_HELPERS{
 			$data_update = 'Error: No response.';
 		} else {
 			$data_response = json_decode($response);
-			if(curl_getinfo($curl, CURLINFO_HTTP_CODE) == '400') {
+			$code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+			if($code == '400') {
 				$data_update = 'Wrong carrier, choose again Custom Provier!';
 			} else {
 				if(isset($data_response->errors) && !empty($data_response->errors)) {
@@ -88,7 +89,7 @@ class DEVVPST_HELPERS{
 		curl_close($curl);
 
 		$res = array(
-			'code' => curl_getinfo($curl, CURLINFO_HTTP_CODE),
+			'code' => $code,
 			'data' => $data_update,
 		);
 
@@ -130,6 +131,7 @@ class DEVVPST_HELPERS{
 		);
 
 		curl_setopt ($curl, CURLOPT_HTTPHEADER, $headers);
+		$code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		$response = curl_exec($curl);
 		if(empty($response)) {
 			$data_del = 'Error: No response.';
@@ -140,7 +142,7 @@ class DEVVPST_HELPERS{
 		curl_close($curl);
 
 		$res = array(
-			'code' => curl_getinfo($curl, CURLINFO_HTTP_CODE),
+			'code' => $code,
 			'data' => $data_del,
 		);
 
