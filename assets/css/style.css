@@ -1,0 +1,106 @@
+#multiple-shipment-tracking #shipment-tracking-form {
+    display: none;
+}
+#multiple-shipment-tracking .tracking-content {
+    background: #efefef none repeat scroll 0 0;
+    padding: 10px;
+    position: relative;
+    margin: 0;
+}
+#multiple-shipment-tracking .meta {
+    font-size: 11px;
+    color: #999;
+    padding: 10px;
+    margin: 0;
+}
+#multiple-shipment-tracking .meta a.delete-tracking {
+    color: #a00;
+}
+.devvpst-settings .setting-devvpst-content .check-progress {
+    color: #a00;
+    font-size: 16px;
+}
+.devvpst-show-list label {
+    display: inherit;
+    margin-top: 10px;
+}
+#button-add-tracking-import {
+    position: relative;
+    top: 15px;
+}
+.list-tracking,
+.add-tracking-import {
+    background: #fff;
+    padding: 2%;
+    width: 94%;
+    margin-top: 20px;
+}
+.list-tracking p {
+    margin: 0;
+}
+.devvpst-active .check-progress {
+    color: red;
+}
+.devvpst-active .action {
+    margin-top: 20px;
+}
+.banner-plugin {
+    float: left;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.banner-plugin h2 {
+    float: left;
+    width: 100%;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.main-plugin {
+    float: left;
+    width: 100%;
+}
+.devvpsp-wapper.no-show .main-plugin .main-left {
+    width: 96%;
+}
+.main-plugin .main-left {
+    float: left;
+    width: 66%;
+    background: #fff;
+    padding: 2%;
+}
+.devvpsp-wapper.no-show .main-plugin .main-right {
+    display: none;
+}
+.main-plugin .main-right {
+    float: left;
+    width: 28%;
+    margin-left: 2%;
+}
+
+.main-plugin .main-right .devvp-widgets {
+    float: left;
+    width: 96%;
+    padding: 2%;
+    background: #1796e5;
+    margin-bottom: 10px;
+}
+
+.main-plugin .main-right .devvp-widgets ul {
+    padding-left: 5%;
+}
+
+.main-plugin .main-right .devvp-widgets a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.main-plugin .main-right .devvp-widgets h3 {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid;
+    padding-bottom: 25px;
+    padding-left: 5%;
+}
